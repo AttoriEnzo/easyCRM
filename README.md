@@ -1,5 +1,6 @@
 # easyCRM
 Small light CRM
+
 Non sono un programmatore, il codice é stato generato quasi interamente da Gemini.
 Quando eravamo quasi alla fine, Gemini ha iniziato a non seguire più il progetto
 e a generare file scollegati.
