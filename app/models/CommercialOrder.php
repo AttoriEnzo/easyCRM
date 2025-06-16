@@ -300,6 +300,10 @@ public function create() {
         return ['success' => false, 'error' => $error];
     }
 }
+
+    public function getInsertId() {
+    return $this->conn->insert_id;
+}
     
     public function closeConnection() {
         if ($this->conn && $this->conn->ping()) {
