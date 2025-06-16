@@ -254,6 +254,53 @@ class CommercialOrder {
         $stmt->close();
     }
 
+public function create() {
+    $query = "INSERT INTO " . $this->table_name . " (
+        contact_id,
+        commercial_user_id,
+        shipping_address_id,
+        order_date,
+        status,
+        expected_shipping_date,
+        carrier,
+        shipping_costs,
+        notes_commercial,
+        notes_technical,
+        total_amount
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $this->conn->prepare($query);
+
+    if (!$stmt) {
+        return ['success' => false, 'error' => $this->conn->error];
+    }
+
+    $stmt->bind_param(
+        "iiissssdssd",
+        $this->contact_id,
+        $this->commercial_user_id,
+        $this->shipping_address_id,
+        $this->order_date,
+        $this->status,
+        $this->expected_shipping_date,
+        $this->carrier,
+        $this->shipping_costs,
+        $this->notes_commercial,
+        $this->notes_technical,
+        $this->total_amount
+    );
+
+    if ($stmt->execute()) {
+        $insert_id = $this->conn->insert_id;
+        $stmt->close();
+        return ['success' => true, 'insert_id' => $insert_id];
+    } else {
+        $error = $stmt->error;
+        $stmt->close();
+        return ['success' => false, 'error' => $error];
+    }
+}
+    
     public function closeConnection() {
         if ($this->conn && $this->conn->ping()) {
             $this->conn->close();
