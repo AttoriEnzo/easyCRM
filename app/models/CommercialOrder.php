@@ -22,101 +22,103 @@ class CommercialOrder {
     public $total_amount;
     public $created_at;
     public $updated_at;
-	
+
     public function __construct() {
         $this->conn = getDbConnection();
     }
 
-	
     /**
      * Crea un nuovo ordine commerciale nel database.
      * @return array Un array con 'success' (bool) e 'error' (string, se presente).
      */
-public function readAll($current_user_id = null, $current_user_role = null, $search_query = '') {
-    $query = "SELECT co.*, ca.address as shipping_address_address, ca.city as shipping_address_city, 
-              ca.zip as shipping_address_zip, ca.province as shipping_address_province, 
-              ca.address_type as shipping_address_type
-              FROM commercial_orders co
-              JOIN contact_addresses ca ON co.shipping_address_id = ca.id";
+    public function readAll($current_user_id = null, $current_user_role = null, $search_query = '') {
+        $query = "SELECT co.*, ca.address as shipping_address_address, ca.city as shipping_address_city, 
+                  ca.zip as shipping_address_zip, ca.province as shipping_address_province, 
+                  ca.address_type as shipping_address_type
+                  FROM commercial_orders co
+                  JOIN contact_addresses ca ON co.shipping_address_id = ca.id";
 
-    $conditions = [];  // ✅ Ora è dentro la funzione!
-    $bind_values = [];
-    $types = "";
+        $conditions = [];
+        $bind_values = [];
+        $types = "";
 
+        // Filtro per Sales: vede solo i propri ordini
+        if ($current_user_role === 'Sales' && $current_user_id !== null) {
+            $conditions[] = "co.contact_id = ?";
+            $types .= "i";
+            $bind_values[] = &$current_user_id;
+        }
 
-$conditions = [];
-$bind_values = [];
-$types = "";
+        // Filtri di ricerca
+        if (!empty($search_query)) {
+            $search_term = "%" . $search_query . "%";
+            $search_conditions = "(co.status LIKE ? OR co.notes_commercial LIKE ? OR co.notes_technical LIKE ?)";
+            $conditions[] = $search_conditions;
+            $types .= "sss";
+            $bind_values[] = &$search_term;
+            $bind_values[] = &$search_term;
+            $bind_values[] = &$search_term;
+        }
 
-// Filtro per Sales: vede solo i propri ordini
-if ($current_user_role === 'Sales' && $current_user_id !== null) {
-    $conditions[] = "co.contact_id = ?";
-    $types .= "i";
-    $bind_values[] = &$current_user_id;
-}
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(" AND ", $conditions);
+        }
 
-// Filtri di ricerca
-if (!empty($search_query)) {
-    $search_term = "%" . $search_query . "%";
-    $search_conditions = "(c.first_name LIKE ? OR co.status LIKE ? OR co.notes_commercial LIKE ? OR co.notes_technical LIKE ?)";
-    $conditions[] = $search_conditions;
-    $types .= "ssss";
-    $bind_values[] = &$search_term;
-    $bind_values[] = &$search_term;
-    $bind_values[] = &$search_term;
-    $bind_values[] = &$search_term;
-}
+        $query .= " ORDER BY co.order_date DESC, co.created_at DESC";
 
-if (!empty($conditions)) {
-    $query .= " WHERE " . implode(" AND ", $conditions);
-}
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            error_log("Errore nella preparazione della query: " . $this->conn->error);
+            return [];
+        }
 
-// **Eliminato ORDER BY duplicato**
-$query .= " ORDER BY co.order_date DESC, co.created_at DESC";
+        if (!empty($bind_values)) {
+            $params = array_merge([$types], $bind_values);
+            call_user_func_array([$stmt, 'bind_param'], $this->refValues($params));
+        }
 
-error_log("Query generata: " . $query);
-die("Query generata: " . $query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orders = [];
+        while ($row = $result->fetch_assoc()) {
+            $orders[] = $row;
+        }
+        $stmt->close();
+        return $orders;
+    }
 
-$stmt = $this->conn->prepare($query);
-if ($stmt === false) {
-    error_log("Errore nella preparazione della query: " . $this->conn->error);
-    return [];
-}
-
-if (!empty($bind_values)) {
-    call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $bind_values));
-}
-
-$stmt->execute();
-$result = $stmt->get_result();
-$orders = [];
-while ($row = $result->fetch_assoc()) {
-    $orders[] = $row;
-}
-$stmt->close();
-return $orders;
-
+    /**
+     * Utility per bind_param con call_user_func_array
+     */
+    private function refValues($arr) {
+        // PHP 5.3+ compatibilità per bind_param 
+        $refs = [];
+        foreach ($arr as $key => $value) {
+            $refs[$key] = &$arr[$key];
+        }
+        return $refs;
+    }
 
     /**
      * Aggiorna un ordine commerciale esistente.
      * @return array Un array con 'success' (bool) e 'error' (string, se presente).
      */
- public function update() {
-    $query = "UPDATE " . $this->table_name . " SET
-                contact_id = ?, 
-                shipping_address_id = ?, 
-                order_date = ?, 
-                status = ?, 
-                expected_shipping_date = ?, 
-                carrier = ?, 
-                shipping_costs = ?, 
-                notes_commercial = ?, 
-                notes_technical = ?, 
-                total_amount = ?
-              WHERE id = ?";
+    public function update() {
+        $query = "UPDATE " . $this->table_name . " SET
+                    contact_id = ?, 
+                    commercial_user_id = ?, 
+                    shipping_address_id = ?, 
+                    order_date = ?, 
+                    status = ?, 
+                    expected_shipping_date = ?, 
+                    carrier = ?, 
+                    shipping_costs = ?, 
+                    notes_commercial = ?, 
+                    notes_technical = ?, 
+                    total_amount = ?
+                  WHERE id = ?";
 
-    $stmt = $this->conn->prepare($query);
-}
+        $stmt = $this->conn->prepare($query);
 
         // Sanifica e prepara i dati per il binding.
         $this->contact_id = filter_var($this->contact_id, FILTER_VALIDATE_INT);
@@ -208,11 +210,11 @@ return $orders;
         if (!empty($data['shipping_costs']) && (!is_numeric($data['shipping_costs']) || floatval($data['shipping_costs']) < 0)) {
             $errors[] = "I costi di spedizione devono essere un numero positivo.";
         }
-        
+
         if (!empty($data['total_amount']) && (!is_numeric($data['total_amount']) || floatval($data['total_amount']) < 0)) {
             $errors[] = "Il totale dell'ordine deve essere un numero positivo.";
         }
-        
+
         // Validazione date (formato YYYY-MM-DD)
         $date_fields = ['order_date', 'expected_shipping_date'];
         foreach ($date_fields as $field) {
@@ -242,16 +244,15 @@ return $orders;
                       WHERE coi.order_id = ?
                   )
                   WHERE co.id = ?";
-        
+
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("ii", $order_id, $order_id);
-        
+
         if (!$stmt->execute()) {
             error_log("Errore nel ricalcolo del totale ordine per ID " . $order_id . ": " . $stmt->error);
         }
         $stmt->close();
     }
-
 
     public function closeConnection() {
         if ($this->conn && $this->conn->ping()) {
