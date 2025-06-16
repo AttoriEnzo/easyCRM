@@ -132,7 +132,7 @@ class RepairController {
                 $result = $this->repairModel->create();
 
                 if ($result['success']) {
-                    $new_repair_id = $this->repairModel->conn->insert_id; // Ottieni l'ID della riparazione appena creata
+                    $new_repair_id = $this->repairModel->getInsertId(); // Ottieni l'ID della riparazione appena creata
 
                     // Salva gli interventi associati alla riparazione
                     foreach ($repair_items as $item) {
