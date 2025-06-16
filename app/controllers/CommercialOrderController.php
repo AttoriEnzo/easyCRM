@@ -127,7 +127,7 @@ class CommercialOrderController {
                 $result = $this->commercialOrderModel->create();
 
                 if ($result['success']) {
-                    $new_order_id = $this->commercialOrderModel->conn->insert_id; // Ottieni l'ID dell'ordine appena creato
+                    $new_order_id = $this->commercialOrderModel->getInsertId(); // Ottieni l'ID dell'ordine appena creato
 
                     // Salva gli articoli associati all'ordine
                     foreach ($order_items as $item) {
