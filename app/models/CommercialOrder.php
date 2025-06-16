@@ -32,39 +32,49 @@ class CommercialOrder {
      * @return array Un array con 'success' (bool) e 'error' (string, se presente).
      */
     public function readAll($current_user_id = null, $current_user_role = null, $search_query = '') {
-        $query = "SELECT co.*, ca.address as shipping_address_address, ca.city as shipping_address_city, 
-                  ca.zip as shipping_address_zip, ca.province as shipping_address_province, 
-                  ca.address_type as shipping_address_type
-                  FROM commercial_orders co
-                  JOIN contact_addresses ca ON co.shipping_address_id = ca.id";
+        $query = "SELECT co.*, 
+                 ca.address as shipping_address_address, ca.city as shipping_address_city, 
+                 ca.zip as shipping_address_zip, ca.province as shipping_address_province, 
+                 ca.address_type as shipping_address_type,
+                 c.first_name as contact_first_name, 
+                 c.last_name as contact_last_name, 
+                 c.company as company
+          FROM commercial_orders co
+          LEFT JOIN contact_addresses ca ON co.shipping_address_id = ca.id
+          LEFT JOIN contacts c ON co.contact_id = c.id";
 
         $conditions = [];
         $bind_values = [];
         $types = "";
 
         // Filtro per Sales: vede solo i propri ordini
-        if ($current_user_role === 'Sales' && $current_user_id !== null) {
-            $conditions[] = "co.contact_id = ?";
-            $types .= "i";
-            $bind_values[] = &$current_user_id;
-        }
+        $conditions = [];
+$types = '';
+$bind_values = [];
 
-        // Filtri di ricerca
-        if (!empty($search_query)) {
-            $search_term = "%" . $search_query . "%";
-            $search_conditions = "(co.status LIKE ? OR co.notes_commercial LIKE ? OR co.notes_technical LIKE ?)";
-            $conditions[] = $search_conditions;
-            $types .= "sss";
-            $bind_values[] = &$search_term;
-            $bind_values[] = &$search_term;
-            $bind_values[] = &$search_term;
-        }
+// Filtro per Sales: vede solo i propri ordini
+if ($current_user_role === 'commerciale' && $current_user_id !== null) {
+    $conditions[] = "co.commercial_user_id = ?";
+    $types .= "i";
+    $bind_values[] = &$current_user_id;
+}
 
-        if (!empty($conditions)) {
-            $query .= " WHERE " . implode(" AND ", $conditions);
-        }
+// Filtri di ricerca
+if (!empty($search_query)) {
+    $search_term = "%" . $search_query . "%";
+    $search_conditions = "(co.status LIKE ? OR co.notes_commercial LIKE ? OR co.notes_technical LIKE ?)";
+    $conditions[] = $search_conditions;
+    $types .= "sss";
+    $bind_values[] = &$search_term;
+    $bind_values[] = &$search_term;
+    $bind_values[] = &$search_term;
+}
 
-        $query .= " ORDER BY co.order_date DESC, co.created_at DESC";
+if (!empty($conditions)) {
+    $query .= " WHERE " . implode(" AND ", $conditions);
+}
+
+$query .= " ORDER BY co.order_date DESC, co.created_at DESC";
 
         $stmt = $this->conn->prepare($query);
         if ($stmt === false) {
@@ -163,6 +173,11 @@ class CommercialOrder {
         $stmt->close();
         return ['success' => false, 'error' => $error_message];
     }
+	
+	public function getInsertId() {
+    return $this->conn->insert_id;
+}
+	
 
     /**
      * Elimina un ordine commerciale e i suoi articoli associati (grazie a ON DELETE CASCADE).
@@ -230,6 +245,33 @@ class CommercialOrder {
 
         return $errors;
     }
+	
+	public function readOne($id) {
+    $query = "SELECT co.*, 
+                     ca.address as shipping_address_address, ca.city as shipping_address_city, 
+                     ca.zip as shipping_address_zip, ca.province as shipping_address_province, 
+                     ca.address_type as shipping_address_type,
+                     c.first_name as contact_first_name, 
+                     c.last_name as contact_last_name, 
+                     c.company as company
+              FROM commercial_orders co
+              LEFT JOIN contact_addresses ca ON co.shipping_address_id = ca.id
+              LEFT JOIN contacts c ON co.contact_id = c.id
+              WHERE co.id = ?
+              LIMIT 1";
+
+    $stmt = $this->conn->prepare($query);
+    if ($stmt === false) {
+        error_log("Errore nella preparazione della query: " . $this->conn->error);
+        return null;
+    }
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $order = $result->fetch_assoc();
+    $stmt->close();
+    return $order ?: null;
+}
 
     /**
      * Ricalcola il total_amount di un ordine basandosi sulla somma degli item.
@@ -253,8 +295,8 @@ class CommercialOrder {
         }
         $stmt->close();
     }
-
-public function create() {
+	
+	public function create() {
     $query = "INSERT INTO " . $this->table_name . " (
         contact_id,
         commercial_user_id,
@@ -301,10 +343,6 @@ public function create() {
     }
 }
 
-    public function getInsertId() {
-    return $this->conn->insert_id;
-}
-    
     public function closeConnection() {
         if ($this->conn && $this->conn->ping()) {
             $this->conn->close();
