@@ -471,5 +471,11 @@ class Repair {
         $repair = $result->fetch_assoc();
         $stmt->close();
         return $repair;
+     public function findBySerialNumber($serial_number) {
+        // ...già presente...
+    }
+
+    public function getInsertId() {
+        return $this->conn->insert_id;
     }
 }
