@@ -1,0 +1,2 @@
+# easyCRM
+Small light CRM
