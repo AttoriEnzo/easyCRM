@@ -106,8 +106,13 @@ $can_print_technical_doc = in_array($current_user_role, ['tecnico', 'admin', 'su
                             <td><?php echo htmlspecialchars($item['description']); ?></td>
                             <td><?php echo htmlspecialchars($item['ordered_quantity']); ?></td>
                             <td>&euro; <?php echo htmlspecialchars(number_format($item['ordered_unit_price'], 2, ',', '.')); ?></td>
-                            <td>&euro; <?php echo htmlspecialchars(number_format($item['item_total'], 2, ',', '.')); ?></td>
-                            <td><?php echo htmlspecialchars($item['actual_shipped_quantity']); ?></td>
+                            <td>&euro; <?php
+    $qty = isset($item['quantity']) ? (float)$item['quantity'] : 0;
+    $price = isset($item['unit_price']) ? (float)$item['unit_price'] : 0;
+    $item_total = $qty * $price;
+    echo htmlspecialchars(number_format($item_total, 2, ',', '.'));
+?></td>
+                            <td><?php echo htmlspecialchars($item['actual_shipped_quantity'] ?? 0); ?></td>
                             <td><?php echo htmlspecialchars($item['actual_shipped_serial_number'] ?? 'N/D'); ?></td>
                             <td class="max-w-xs truncate" title="<?php echo htmlspecialchars($item['notes_item'] ?? ''); ?>">
                                 <?php echo htmlspecialchars($item['notes_item'] ?? 'N/D'); ?>
