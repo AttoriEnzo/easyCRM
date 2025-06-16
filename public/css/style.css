@@ -1,0 +1,189 @@
+/* public/css/style.css */
+
+/* Stili Personalizzati e per la barra di navigazione */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6; /* gray-100 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem; /* Equivalent to p-6 */
+    flex-grow: 1; /* Permette al contenuto di occupare lo spazio disponibile */
+}
+
+/* Stili Generali per Input e Select */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem; /* p-3 */
+    margin-bottom: 1rem; /* mb-4 */
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #6366f1; /* indigo-500 */
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); /* focus:ring-indigo-500 */
+}
+
+/* Stili per i bottoni */
+.btn {
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 600; /* font-semibold */
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; /* Remove underline for links acting as buttons */
+}
+
+.btn-primary {
+    background-color: #4f46e5; /* indigo-600 */
+    color: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); /* shadow-md */
+}
+
+.btn-primary:hover {
+    background-color: #4338ca; /* indigo-700 */
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15); /* shadow-lg */
+}
+
+.btn-secondary {
+    background-color: #6b7280; /* gray-500 */
+    color: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); /* shadow-md */
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563; /* gray-700 */
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15); /* shadow-lg */
+}
+
+.btn-tertiary {
+    background-color: #d1d5db; /* gray-300 */
+    color: #374151; /* gray-700 */
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+}
+
+.btn-tertiary:hover {
+    background-color: #9ca3af; /* gray-400 */
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.1); /* shadow-md */
+}
+
+/* Stili per messaggi flash */
+.flash-message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.flash-success {
+    background-color: #d1fae5; /* green-100 */
+    color: #065f46; /* green-700 */
+}
+
+.flash-error {
+    background-color: #fee2e2; /* red-100 */
+    color: #991b1b; /* red-700 */
+}
+
+.flash-info {
+    background-color: #e0f2fe; /* blue-100 */
+    color: #065f46; /* blue-700 */
+}
+
+/* Stili per la tabella */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem; /* mt-4 */
+}
+
+th, td {
+    padding: 0.75rem; /* p-3 */
+    border: 1px solid #e5e7eb; /* gray-200 */
+    text-align: left;
+}
+
+th {
+    background-color: #f9fafb; /* gray-50 */
+    font-weight: 600;
+    color: #374151; /* gray-700 */
+    text-transform: uppercase;
+    font-size: 0.75rem; /* text-xs */
+    letter-spacing: 0.05em; /* tracking-wider */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f3f4f6; /* Even rows slightly different background */
+}
+
+tbody tr:hover {
+    background-color: #e5e7eb; /* Highlight row on hover */
+}
+
+/* Stile specifico per la barra di navigazione */
+.navbar {
+    background-color: #1f2937; /* gray-800 */
+    padding-top: 1rem; /* py-4 */
+    padding-bottom: 1rem; /* py-4 */
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700; /* font-bold */
+    color: #ffffff;
+
+    text-decoration: none;
+    display: flex; /* Permette all'immagine e al testo di allinearsi */
+    align-items: center;
+}
+
+.navbar-brand img {
+    height: 2.5rem; /* Altezza del logo, es. h-10 in Tailwind */
+    margin-right: 0.5rem; /* Spazio tra logo e testo, es. mr-2 in Tailwind */
+}
+
+.navbar-nav a {
+    color: #d1d5db; /* gray-300 */
+    text-decoration: none;
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border-radius: 0.375rem; /* rounded-md */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.navbar-nav a:hover {
+    background-color: #374151; /* gray-700 */
+}
+
+.navbar-nav a.active {
+    background-color: #4f46e5; /* indigo-600 */
+    color: #ffffff;
+}
