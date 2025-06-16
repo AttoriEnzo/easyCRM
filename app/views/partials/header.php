@@ -74,14 +74,8 @@ $current_user_role = $_SESSION['role'] ?? null;
                 ?>
                     <a href="index.php?page=repair_services" class="<?php echo ($page === 'repair_services') ? 'active' : ''; ?>">Servizi Riparazione</a>
                 <?php endif; ?>
-                
-                <?php 
-                // Il link "Impostazioni Aziendali" è visibile solo per Super Amministratore
-                if ($current_user_role === 'superadmin'): 
-                ?>
-                    <a href="index.php?page=company_settings" class="<?php echo ($page === 'company_settings') ? 'active' : ''; ?>">Impostazioni Aziendali</a>
-                <?php endif; ?>
-
+               
+          
 
                 <div class="relative group">
                     <a href="#" class="flex items-center text-gray-300 hover:bg-gray-700 p-2 rounded-md transition-colors duration-200">
@@ -91,7 +85,30 @@ $current_user_role = $_SESSION['role'] ?? null;
                         <a href="index.php?page=my_profile&action=change_password" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600">
                             <i class="fas fa-key mr-2"></i> Cambia Password
                         </a>
-                        <a href="index.php?page=logout" class="block px-4 py-2 text-sm text-red-300 hover:bg-gray-600">
+
+			    <div class="relative group">
+    <a href="#" class="flex items-center text-gray-300 hover:bg-gray-700 p-2 rounded-md transition-colors duration-200">
+        <i class="fas fa-user-circle mr-2"></i> <?php echo htmlspecialchars($_SESSION['username'] ?? 'Ospite'); ?>
+    </a>
+    <div class="absolute right-0 top-full w-48 bg-gray-700 rounded-md shadow-lg py-2 z-10 opacity-0 group-hover:opacity-100 group-hover:visible transition-opacity duration-200 invisible">
+        <a href="index.php?page=my_profile&action=change_password" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600">
+            <i class="fas fa-key mr-2"></i> Cambia Password
+        </a>
+        <?php 
+        // Il link "Impostazioni Aziendali" è visibile solo per Super Amministratore
+        if ($current_user_role === 'superadmin'): 
+        ?>
+            <a href="index.php?page=company_settings" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600">
+                <i class="fas fa-cog mr-2"></i> Impostazioni Aziendali
+            </a>
+        <?php endif; ?>
+        <a href="index.php?page=logout" class="block px-4 py-2 text-sm text-red-300 hover:bg-gray-600">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
+</div>
+			    
+			    <a href="index.php?page=logout" class="block px-4 py-2 text-sm text-red-300 hover:bg-gray-600">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                     </div>
