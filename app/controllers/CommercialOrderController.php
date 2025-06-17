@@ -157,6 +157,7 @@ class CommercialOrderController {
                     $order = $order_data; // Pre-popola il form con i dati inviati
                     // Se gli order_items_json sono presenti, devono essere decodificati per la vista
                     $order['order_items_data'] = json_decode($order['order_items_json'], true);
+					$order['order_items_data'] = $existing_order_items;
                     require_once __DIR__ . '/../views/commercial_orders/form.php'; // ✅ CORRETTO: Add - POST Error
                     return; 
                 }
@@ -165,11 +166,13 @@ class CommercialOrderController {
                 $_SESSION['message_type'] = "error";
                 $order = $order_data; // Pre-popola il form con i dati inviati
                 $order['order_items_data'] = json_decode($order['order_items_json'], true);
+				$order['order_items_data'] = $existing_order_items;
                 require_once __DIR__ . '/../views/commercial_orders/form.php'; // ✅ CORRETTO: Add - POST Validation Error
                 return;
             }
         }
-        // Per le richieste GET, mostra il form di aggiunta (vuoto)
+        // Per le richieste GET, mostra il form di aggiunta (vuoto)<br />
+		$order['order_items_data'] = $existing_order_items;
         require_once __DIR__ . '/../views/commercial_orders/form.php'; // ✅ CORRETTO: Add - GET
     }
 
@@ -361,6 +364,7 @@ class CommercialOrderController {
                     $_SESSION['message_type'] = "error";
                     $order = array_merge($order, $order_data); // Mantiene dati originali e sovrascrive con POST
                     $order['order_items_data'] = json_decode($order['order_items_json'], true);
+					$order['order_items_data'] = $existing_order_items;
                     require_once __DIR__ . '/../views/commercial_orders/form.php'; // ✅ CORRETTO: Edit - POST Error
                     return;
                 }
@@ -369,11 +373,14 @@ class CommercialOrderController {
                 $_SESSION['message_type'] = "error";
                 $order = array_merge($order, $order_data); // Mantiene dati originali e sovrascrive con POST
                 $order['order_items_data'] = json_decode($order['order_items_json'], true);
+				$order['order_items_data'] = $existing_order_items;
+		echo '<pre>'; print_r($existing_order_items); echo '</pre>';
                 require_once __DIR__ . '/../views/commercial_orders/form.php'; // ✅ CORRETTO: Edit - POST Validation Error
                 return;
             }
         }
-        // Per le richieste GET, mostra il form di modifica con i dati dell'ordine
+        // Per le richieste GET, mostra il form di modifica con i dati dell'ordine<br />
+		$order['order_items_data'] = $existing_order_items;
         require_once __DIR__ . '/../views/commercial_orders/form.php'; // ✅ CORRETTO: Edit - GET
     }
 
