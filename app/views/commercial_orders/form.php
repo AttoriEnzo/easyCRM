@@ -267,8 +267,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <input type="text" id="description_${rowId}" placeholder="Descrizione Articolo" class="w-full text-xs mt-1" value="${itemData.description || ''}" ${isTechnician ? 'disabled' : ''}>
             </td>
             <td><input type="number" step="1" min="1" id="ordered_quantity_${rowId}" class="w-full text-xs numeric-input" value="${itemData.ordered_quantity || 1}" ${isTechnician ? 'disabled' : ''}></td>
-            <td><input type="number" step="0.01" min="0" id="ordered_unit_price_${rowId}" class="w-full text-xs numeric-input" value="${(itemData.ordered_unit_price || 0).toFixed(2)}" ${isTechnician ? 'disabled' : ''}></td>
-            <td><input type="text" id="item_total_${rowId}" class="w-full text-xs bg-gray-100" value="${(itemData.ordered_item_total || 0).toFixed(2)}" readonly></td>
+ <!--           <td><input type="number" step="0.01" min="0" id="ordered_unit_price_${rowId}" class="w-full text-xs numeric-input" value="${(itemData.ordered_unit_price || 0).toFixed(2)}" ${isTechnician ? 'disabled' : ''}></td>
+ <!--           <td><input type="text" id="item_total_${rowId}" class="w-full text-xs bg-gray-100" value="${(itemData.ordered_item_total || 0).toFixed(2)}" readonly></td>
+ 
+ <td><input type="number" step="0.01" min="0" id="ordered_unit_price_${rowId}" class="w-full text-xs numeric-input" value="${parseFloat(itemData.ordered_unit_price || 0).toFixed(2)}" ${isTechnician ? 'disabled' : ''}></td>
+<td><input type="text" id="item_total_${rowId}" class="w-full text-xs bg-gray-100" value="${parseFloat(itemData.ordered_item_total || 0).toFixed(2)}" readonly></td>
+ 
             <td><input type="number" step="1" min="0" id="actual_shipped_quantity_${rowId}" class="w-full text-xs numeric-input" value="${itemData.actual_shipped_quantity || 0}" ${isCommerciale ? 'disabled' : ''}></td>
             <td><textarea id="actual_shipped_serial_number_${rowId}" rows="2" placeholder="Matricole (una per riga o separate da virgola)" class="w-full text-xs" ${isCommerciale ? 'disabled' : ''}>${itemData.actual_shipped_serial_number || ''}</textarea></td>
             <td><textarea id="notes_item_${rowId}" rows="2" placeholder="Note per articolo" class="w-full text-xs" ${isCommerciale ? 'disabled' : ''}>${itemData.notes_item || ''}</textarea></td>
