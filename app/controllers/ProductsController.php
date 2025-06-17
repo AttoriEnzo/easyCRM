@@ -181,7 +181,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 return;
             }
         }
-		var_dump($product); exit;<br />
+		
 		 $product_data = $product;
         require_once __DIR__ . '/../views/products/add_edit.php';
     }
