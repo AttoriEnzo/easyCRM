@@ -88,12 +88,14 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
             } else {
                 $_SESSION['message'] = "Errore di validazione: " . implode(" ", $validation_errors);
                 $_SESSION['message_type'] = "error";
-                $product = $product_data; // Pre-popola il form con i dati inviati
+                $product = $product_data; // Pre-popola il form con i dati inviati<br />
+				 $product_data = $product;
                 require_once __DIR__ . '/../views/products/add_edit.php';
                 return;
             }
         }
-//        require_once __DIR__ . '/../views/products/add_edit.php';<br />
+//        require_once __DIR__ . '/../views/products/add_edit.php';<br /><br />
+		 $product_data = $product;
 		require_once __DIR__ . '/../views/products/add_edit.php';
     }
 
@@ -166,17 +168,21 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                     $_SESSION['message'] = "Errore durante l'aggiornamento del prodotto: " . ($result['error'] ?? 'Errore sconosciuto.');
                     $_SESSION['message_type'] = "error";
                     $product = array_merge($product, $product_data); // Mantiene dati originali e sovrascrive con POST
-                    require_once __DIR__ . '/../views/products/add_edit.php';
+                    $product_data = $product;
+					require_once __DIR__ . '/../views/products/add_edit.php';
                     return;
                 }
             } else {
                 $_SESSION['message'] = "Errore di validazione: " . implode(" ", $validation_errors);
                 $_SESSION['message_type'] = "error";
                 $product = array_merge($product, $product_data); // Mantiene dati originali e sovrascrive con POST
-                require_once __DIR__ . '/../views/products/add_edit.php';
+                $product_data = $product;
+				require_once __DIR__ . '/../views/products/add_edit.php';
                 return;
             }
         }
+		var_dump($product); exit;<br />
+		 $product_data = $product;
         require_once __DIR__ . '/../views/products/add_edit.php';
     }
 
