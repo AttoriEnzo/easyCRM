@@ -177,7 +177,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 return;
             }
         }
-        require_once __DIR__ . '/../views/products/view.php';
+        require_once __DIR__ . '/../views/products/add_edit.php';
     }
 
     /**
