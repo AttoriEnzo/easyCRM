@@ -53,7 +53,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $product_data = [
                 'product_code' => $_POST['product_code'] ?? null,
-				'product_type' => $_POST['product_type'] ?? null,
+		'product_type' => $_POST['product_type'] ?? null,
                 'product_name' => $_POST['product_name'] ?? null,
                 'description' => $_POST['description'] ?? null,
                 'default_price_net' => $_POST['default_price_net'] ?? null,
