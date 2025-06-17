@@ -177,7 +177,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 $_SESSION['message_type'] = "error";
                 $product = array_merge($product, $product_data); // Mantiene dati originali e sovrascrive con POST
                 $product_data = $product;
-				require_once __DIR__ . '/../views/products/add_edit.php';
+		require_once __DIR__ . '/../views/products/add_edit.php';
                 return;
             }
         }
