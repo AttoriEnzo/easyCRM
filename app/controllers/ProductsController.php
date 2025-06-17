@@ -64,7 +64,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
-			var_dump($_POST); exit;
+	
             $validation_errors = $this->productModel->validate($product_data);
 
             if (empty($validation_errors)) {
