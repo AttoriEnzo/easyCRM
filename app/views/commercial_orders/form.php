@@ -32,6 +32,8 @@ $order_statuses = ['Ordine Inserito', 'In Preparazione', 'Pronto per Spedizione'
 // Recupera gli articoli dell'ordine esistenti, se in modalità modifica
 // Questi sono già decodificati nel controller e passati come $order['order_items_data']
 $initial_order_items = $order['order_items_data'] ?? [];
+// Debug temporaneo:
+echo '<pre>'; print_r($initial_order_items); echo '</pre>';
 
 // Codifica i prodotti attivi per JavaScript (per la logica di selezione articoli)
 $active_products_json = json_encode($active_products);
