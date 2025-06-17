@@ -53,7 +53,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $product_data = [
                 'product_code' => $_POST['product_code'] ?? null,
-		'product_type' => $_POST['product_type'] ?? null,
+				'product_type' => $_POST['product_type'] ?? null,
                 'product_name' => $_POST['product_name'] ?? null,
                 'description' => $_POST['description'] ?? null,
                 'default_price_net' => $_POST['default_price_net'] ?? null,
@@ -64,7 +64,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
-	
+			
             $validation_errors = $this->productModel->validate($product_data);
 
             if (empty($validation_errors)) {
@@ -141,6 +141,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
             $product_data = [
                 'id' => $id, // ID necessario per la validazione in modalità modifica
                 'product_code' => $_POST['product_code'] ?? null,
+				'product_type' => $_POST['product_type'] ?? null,
                 'product_name' => $_POST['product_name'] ?? null,
                 'description' => $_POST['description'] ?? null,
                 'default_price_net' => $_POST['default_price_net'] ?? null,
