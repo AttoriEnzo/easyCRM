@@ -9,6 +9,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
     public function __construct(Product $productModel) { // Questo costruttore si aspetta UN SOLO argomento
         $this->productModel = $productModel;
     }
+	
 
     /**
      * Mostra l'elenco di tutti i prodotti.
@@ -52,6 +53,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $product_data = [
                 'product_code' => $_POST['product_code'] ?? null,
+				'product_type' => $_POST['product_type'] ?? null,
                 'product_name' => $_POST['product_name'] ?? null,
                 'description' => $_POST['description'] ?? null,
                 'default_price_net' => $_POST['default_price_net'] ?? null,
@@ -62,6 +64,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
+			var_dump($_POST); exit;
             $validation_errors = $this->productModel->validate($product_data);
 
             if (empty($validation_errors)) {
@@ -177,7 +180,7 @@ class ProductsController { // NOME DELLA CLASSE CORRETTO (PLURALE)
                 $_SESSION['message_type'] = "error";
                 $product = array_merge($product, $product_data); // Mantiene dati originali e sovrascrive con POST
                 $product_data = $product;
-		require_once __DIR__ . '/../views/products/add_edit.php';
+				require_once __DIR__ . '/../views/products/add_edit.php';
                 return;
             }
         }
